@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no" />
+    <meta name="description" content="Interactive 3D model repository for open-source firearm designs" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="viewer.css" />
+    <title>RenderOSArms - 3D Model Viewer</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    
+    <header>
+      <div class="header-content">
+        <h1>🔧 RenderOSArms</h1>
+        <p class="tagline">Interactive 3D Model Repository</p>
+      </div>
+      <nav>
+        <a href="index.html">Browse</a>
+        <a href="viewer.html" class="active">3D Viewer</a>
+        <a href="#community">Community</a>
+        <a href="#documentation">Docs</a>
+      </nav>
+    </header>
+
+    <main class="viewer-layout">
+      <!-- Sidebar Controls -->
+      <aside class="viewer-controls">
+        <section class="control-section">
+          <h3>Model Selection</h3>
+          <select id="modelSelect" class="control-input">
+            <option value="">Select a model...</option>
+            <option value="sample">Sample Model (Demo)</option>
+          </select>
+          <button id="loadModel" class="btn btn-primary">Load Model</button>
+        </section>
+
+        <section class="control-section">
+          <h3>Assembly Controls</h3>
+          <div class="slider-control">
+            <label for="assemblySlider">Assembly State</label>
+            <input 
+              type="range" 
+              id="assemblySlider" 
+              min="0" 
+              max="100" 
+              value="100" 
+              class="control-slider"
+            />
+            <div class="slider-labels">
+              <span>Disassembled</span>
+              <span>Assembled</span>
+            </div>
+          </div>
+          <div class="button-group">
+            <button id="assembleBtn" class="btn">Assemble</button>
+            <button id="disassembleBtn" class="btn">Disassemble</button>
+          </div>
+        </section>
+
+        <section class="control-section">
+          <h3>View Controls</h3>
+          <div class="button-group">
+            <button id="frontView" class="btn btn-small">Front</button>
+            <button id="sideView" class="btn btn-small">Side</button>
+            <button id="topView" class="btn btn-small">Top</button>
+            <button id="isoView" class="btn btn-small">Iso</button>
+          </div>
+        </section>
+
+        <section class="control-section">
+          <h3>Background</h3>
+          <div class="color-picker">
+            <button class="color-btn" data-color="#1a1a1a" style="background: #1a1a1a"></button>
+            <button class="color-btn" data-color="#ffffff" style="background: #ffffff"></button>
+            <button class="color-btn" data-color="#87CEEB" style="background: #87CEEB"></button>
+            <button class="color-btn" data-color="#2d3436" style="background: #2d3436"></button>
+          </div>
+        </section>
+
+        <section class="control-section">
+          <h3>Lighting</h3>
+          <div class="slider-control">
+            <label for="ambientLight">Ambient</label>
+            <input type="range" id="ambientLight" min="0" max="100" value="50" class="control-slider" />
+          </div>
+          <div class="slider-control">
+            <label for="mainLight">Main Light</label>
+            <input type="range" id="mainLight" min="0" max="100" value="80" class="control-slider" />
+          </div>
+          <div class="slider-control">
+            <label for="fillLight">Fill Light</label>
+            <input type="range" id="fillLight" min="0" max="100" value="30" class="control-slider" />
+          </div>
+        </section>
+
+        <section class="control-section">
+          <h3>Material</h3>
+          <div class="slider-control">
+            <label for="materialColor">Color</label>
+            <input type="color" id="materialColor" value="#333333" class="control-input" />
+          </div>
+          <div class="slider-control">
+            <label for="shininess">Shininess</label>
+            <input type="range" id="shininess" min="0" max="100" value="50" class="control-slider" />
+          </div>
+          <div class="slider-control">
+            <label for="metalness">Metalness</label>
+            <input type="range" id="metalness" min="0" max="100" value="0" class="control-slider" />
+          </div>
+        </section>
+
+        <section class="control-section">
+          <h3>Info</h3>
+          <div id="modelInfo" class="info-display">
+            <p>No model loaded</p>
+          </div>
+        </section>
+      </aside>
+
+      <!-- 3D Viewer Container -->
+      <div class="viewer-main">
+        <div id="viewer3d" class="viewer-canvas"></div>
+        <div class="viewer-overlay">
+          <div id="loadingIndicator" class="loading-indicator" style="display: none;">
+            <div class="spinner"></div>
+            <p>Loading model...</p>
+          </div>
+          <div id="errorMessage" class="error-message" style="display: none;"></div>
+        </div>
+        <div class="viewer-hints">
+          <p><strong>Controls:</strong></p>
+          <ul>
+            <li>Left Click + Drag: Rotate</li>
+            <li>Right Click + Drag: Pan</li>
+            <li>Scroll: Zoom</li>
+            <li>Click on parts to select</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Part Information Panel -->
+      <aside class="part-info">
+        <h3>Part Details</h3>
+        <div id="partDetails" class="part-details">
+          <p>Click on a part to see details</p>
+        </div>
+      </aside>
+    </main>
+
+    <footer>
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>RenderOSArms</h4>
+          <p>Open-source 3D firearm model repository</p>
+        </div>
+        <div class="footer-section">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="../ARCHITECTURE.md">Architecture</a></li>
+            <li><a href="../API.md">API Docs</a></li>
+            <li><a href="../CONTRIBUTING.md">Contributing</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Community</h4>
+          <ul>
+            <li><a href="../COMMUNITY.md">Guidelines</a></li>
+            <li><a href="https://github.com/4-b100m/renderOSArms">GitHub</a></li>
+            <li><a href="../SECURITY.md">Security</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 RenderOSArms Community. Open Source.</p>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r158/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/examples/js/loaders/STLLoader.js"></script>
+    <script src="viewer3d.js"></script>
+    <script src="viewer-app.js"></script>
+  </body>
+</html>
