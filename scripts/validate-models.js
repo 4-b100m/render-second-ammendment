@@ -77,12 +77,17 @@ async function validateAllModels() {
   console.log('VALIDATION SUMMARY');
   console.log('='.repeat(60));
   console.log(`Total Models: ${totalModels}`);
-  console.log(`Passed: ${passedModels} (${Math.round(passedModels/totalModels*100)}%)`);
-  console.log(`Failed: ${failedModels} (${Math.round(failedModels/totalModels*100)}%)`);
   
-  // Calculate average score
-  const avgScore = allResults.reduce((sum, r) => sum + r.score, 0) / totalModels;
-  console.log(`Average Score: ${Math.round(avgScore)}/100`);
+  if (totalModels === 0) {
+    console.log('No models found to validate.');
+  } else {
+    console.log(`Passed: ${passedModels} (${Math.round(passedModels/(totalModels || 1)*100)}%)`);
+    console.log(`Failed: ${failedModels} (${Math.round(failedModels/(totalModels || 1)*100)}%)`);
+    
+    // Calculate average score
+    const avgScore = allResults.reduce((sum, r) => sum + r.score, 0) / totalModels;
+    console.log(`Average Score: ${Math.round(avgScore)}/100`);
+  }
   
   // Show models that need attention
   const needsAttention = allResults

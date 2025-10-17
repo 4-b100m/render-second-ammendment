@@ -287,9 +287,14 @@ class ModelValidator {
    * Calculate overall score
    */
   calculateScore() {
-    const passPoints = this.results.passed.length * 10;
-    const warningPenalty = this.results.warnings.length * 2;
-    const errorPenalty = this.results.errors.length * 10;
+    // Scoring constants
+    const PASS_POINTS = 10;        // Points awarded for each passed check
+    const WARNING_PENALTY = 2;     // Points deducted for each warning
+    const ERROR_PENALTY = 10;      // Points deducted for each error
+
+    const passPoints = this.results.passed.length * PASS_POINTS;
+    const warningPenalty = this.results.warnings.length * WARNING_PENALTY;
+    const errorPenalty = this.results.errors.length * ERROR_PENALTY;
 
     let score = passPoints - warningPenalty - errorPenalty;
     
